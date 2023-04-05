@@ -1,10 +1,9 @@
 package atomic_cinema_ru.database.users
 
-import org.jetbrains.exposed.sql.javatime.date
 import java.time.LocalDate
 
 class UserDTO (
-    val id : Int,
+    var id : Int = 0,
     val login : String,
     val password : String,
     val dateBirth : LocalDate,
@@ -12,4 +11,5 @@ class UserDTO (
     val name : String,
     val lastName : String,
     val numberPhone : String,
+    val idRole : Int
 )

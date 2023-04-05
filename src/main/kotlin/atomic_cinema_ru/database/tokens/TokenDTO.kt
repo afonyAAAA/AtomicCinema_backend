@@ -1,9 +1,6 @@
 package atomic_cinema_ru.database.tokens
 
-import java.time.LocalDate
-
-class TokensDTO(
-    val id : Int,
+class TokenDTO(
     val login : String,
     val token : String
 )
