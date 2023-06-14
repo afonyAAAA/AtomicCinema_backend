@@ -1,21 +1,21 @@
 package atomic_cinema_ru.features.login
 
-import atomic_cinema_ru.features.cache.InMemoryCache
-import atomic_cinema_ru.features.cache.TokenCache
-import io.ktor.http.*
+import atomic_cinema_ru.features.security.authenticate
+import atomic_cinema_ru.security.hashing.HashingService
+import atomic_cinema_ru.security.token.TokenConfig
+import atomic_cinema_ru.security.token.TokenService
 import io.ktor.server.application.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import java.util.UUID
 
-fun Application.configureLoginRouting() {
+fun Application.configureLoginRouting(tokenConfig : TokenConfig, hashingService: HashingService, tokenService: TokenService) {
     routing {
         post("/login") {
-            LoginController().performLogin(call)
+           performLogin(call, hashingService, tokenService, tokenConfig)
         }
-        post("/login/performToken") {
-            LoginController().performLoginWithToken(call)
+        post("/goOut"){
+            deactivateToken(call)
         }
+        authenticate()
     }
 }
+

@@ -5,29 +5,25 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object Tokens : Table("cinema.tokens") {
-    private val id = Tokens.integer("idtoken").autoIncrement()
-    private val login = Tokens.varchar("login", 50)
-    private val token = Tokens.varchar("token", 50)
-
-    fun insert(tokensDTO: TokenDTO){
-        transaction {
-            Tokens.insert {
-                it[login] = tokensDTO.login
-                it[token] = tokensDTO.token
+object RevListToken : Table("cinema.revListToken") {
+    private val token = RevListToken.varchar("token", 250)
+    fun insert(tokenUser: String){
+       try {
+            transaction {
+                RevListToken.insert {
+                    it[token] = tokenUser
+                }
             }
-        }
+       }catch (e : Exception){
+           e.printStackTrace()
+       }
     }
 
-    fun fetchToken(tokenUser : String) : TokenDTO?{
+    fun fetchToken(tokenUser : String) : String?{
         return try {
             transaction {
-                val tokenModel = Tokens.select{token.eq(tokenUser)}.single()
-
-                TokenDTO(
-                    token = tokenModel[token],
-                    login = tokenModel[login]
-                )
+                val tokenModel = RevListToken.select{token.eq(tokenUser)}.single()
+                tokenModel.toString()
             }
         }catch (e : Exception){
             null

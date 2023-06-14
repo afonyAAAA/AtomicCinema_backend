@@ -1,46 +1,42 @@
 package atomic_cinema_ru.features.register
 
-import atomic_cinema_ru.database.tokens.Tokens
-import atomic_cinema_ru.database.tokens.TokenDTO
 import atomic_cinema_ru.database.users.UserDTO
 import atomic_cinema_ru.database.users.Users
+import atomic_cinema_ru.security.hashing.HashingService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
-import java.util.*
 
-
-class RegisterController{
-
-    suspend fun registerNewUser(call : ApplicationCall){
-
+suspend fun registerNewUser(call : ApplicationCall, hashingService: HashingService){
+    try{
         val registerReceiveRemote = call.receive<RegisterReceiveRemote>()
-
         val userDTO = Users.fetchUser(registerReceiveRemote.login)
-
         if(userDTO != null){
             call.respond(HttpStatusCode.Conflict, "user is already exist")
         }else{
-            val token = UUID.randomUUID().toString()
 
-                Users.insert(
-                    UserDTO(
-                        login = registerReceiveRemote.login,
-                        password = registerReceiveRemote.password,
-                        numberPhone = registerReceiveRemote.numberPhone,
-                        firstName = registerReceiveRemote.firstName,
-                        name = registerReceiveRemote.name,
-                        lastName = registerReceiveRemote.lastName,
-                        dateBirth = registerReceiveRemote.dateBirth,
-                        idRole = registerReceiveRemote.idRole
-                    )
+            val saltedHash = hashingService.generateSaltedHash(registerReceiveRemote.password)
+
+            Users.insert(
+                UserDTO(
+                    login = registerReceiveRemote.login,
+                    password = saltedHash.hash,
+                    salt = saltedHash.salt,
+                    numberPhone = registerReceiveRemote.numberPhone,
+                    firstName = registerReceiveRemote.firstName,
+                    name = registerReceiveRemote.name,
+                    lastName = registerReceiveRemote.lastName,
+                    dateBirth = registerReceiveRemote.dateBirth,
+                    idRole = registerReceiveRemote.idRole
                 )
-                Tokens.insert(TokenDTO(token = token, login = registerReceiveRemote.login))
+            )
 
-            call.respond(RegisterResponseRemote(token = token))
+            call.respond(HttpStatusCode.OK)
+
         }
-
-
+    }catch (e : Exception){
+        e.printStackTrace()
     }
 }
+

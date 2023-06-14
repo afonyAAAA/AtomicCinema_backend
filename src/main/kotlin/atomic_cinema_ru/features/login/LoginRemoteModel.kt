@@ -16,23 +16,10 @@ data class LoginResponseRemote(
 )
 
 @Serializable
-data class TokenReceiveRemote(
-    val login: String,
-    val token: String
+data class SecretInfoResponseRemote(
+    val id : Int,
+    val role : String
 )
 
-@Serializable
-data class TokenResponseRemote(
-    val id : Int,
-    val login : String,
-    val password : String,
-    @Serializable(with = LocalDateSerializer::class)
-    val dateBirth : LocalDate,
-    val firstName : String,
-    val name : String,
-    val lastName : String,
-    val numberPhone : String,
-    val idRole : Int
-)
 
 
