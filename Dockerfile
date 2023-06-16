@@ -1,6 +1,6 @@
 FROM adoptopenjdk:11-jre-hotspot
 
-WORKDIR /data
+WORKDIR /app
 
 COPY build/libs/atomic_cinema_ru.atomic_cinema_backend-all.jar .
 
