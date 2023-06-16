@@ -7,7 +7,7 @@ val commons_codec_version: String by project
 
 plugins {
     kotlin("jvm") version "1.8.10"
-    id("io.ktor.plugin") version "2.1.2"
+    id("io.ktor.plugin") version "2.3.1"
                 id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
 }
 
@@ -43,4 +43,10 @@ dependencies {
 
     implementation ("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
     implementation("org.postgresql:postgresql:42.5.4")
+}
+
+tasks.jar{
+    manifest {
+        attributes["Main-Class"] = "atomic_cinema_ru.ApplicationKt"
+    }
 }

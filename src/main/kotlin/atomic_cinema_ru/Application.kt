@@ -29,7 +29,7 @@ fun main(args : Array<String>) : Unit = io.ktor.server.netty.EngineMain.main(arg
 
 fun Application.module() {
 
-    Database.connect("jdbc:postgresql://localhost:5432/postgres", driver = "org.postgresql.Driver", "postgres", "admin123")
+    Database.connect("jdbc:postgresql://0.0.0.0:5432/postgres", driver = "org.postgresql.Driver", "postgres", "admin123")
 
     install(ContentNegotiation){
         json(Json{
@@ -46,9 +46,9 @@ fun Application.module() {
         secret = System.getenv("JWT_SECRET")
     )
 
+    configureSecurity(tokenConfig)
     configureRegisterRouting(hashingService)
     configureLoginRouting(tokenConfig, hashingService, tokenService)
-    configureSecurity(tokenConfig)
     configureMovieRouting()
     configureRouting()
     configureProfileRouting()
