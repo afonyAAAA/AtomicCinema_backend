@@ -28,6 +28,17 @@ data class ProfileInfoReceiveRemote(
 )
 
 @Serializable
+data class ProfileEditReceiveRemote(
+    @Serializable(with = LocalDateSerializer::class)
+    val dateOfBirth : LocalDate,
+    val firstName : String,
+    val name : String,
+    val lastName : String,
+    val numberPhone : String,
+)
+
+
+@Serializable
 data class ProfileInfoPaymentsResponse(
    val sumPay : Double,
    val countTickets : Int

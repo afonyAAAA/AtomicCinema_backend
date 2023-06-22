@@ -50,18 +50,15 @@ suspend fun updateStatusTicket(call: ApplicationCall){
 suspend fun checkPresentsTickets(call: ApplicationCall){
     val receive = call.receive<TicketsUserReceiveRemote>()
 
-    val result = getTicketsUserByLogin(receive.login)
-
     val presentsTime = LocalDate.now()
 
+    val result = getTicketsUserByLogin(receive.login).filter { it.dateStartSeance == presentsTime && !it.returned && it.nameStatus == "РћРїР»Р°С‡РµРЅРѕ" }
+
     if(result.isNotEmpty()){
-        call.respond(result.filter {
-            it.dateStartSeance == presentsTime && !it.returned && it.nameStatus == "Оплачено"
-        })
+        call.respond(result)
     }else{
         call.respond(HttpStatusCode.NotFound)
     }
-
 }
 
 suspend fun checkTicketsOnSeances(call: ApplicationCall){
@@ -74,7 +71,7 @@ suspend fun checkTicketsOnSeances(call: ApplicationCall){
     val result = TicketsUsers.getAllTicketsUser(userID = userID.toInt()).filter {
         it.dateStartSeance == presentsTime &&
                 !it.returned &&
-                it.nameStatus == "Оплачено"
+                it.nameStatus == "РћРїР»Р°С‡РµРЅРѕ"
     }
 
     if(result.isNotEmpty()){
