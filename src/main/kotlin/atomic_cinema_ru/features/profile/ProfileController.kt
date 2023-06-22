@@ -98,7 +98,7 @@ suspend fun getPaymentsForMonth(call : ApplicationCall){
 
 suspend fun editProfile(call : ApplicationCall){
     val userInfo = getSecretUserInfo(call)
-    val receive = call.receive<ProfileInfoReceiveRemote>()
+    val receive = call.receive<ProfileEditReceiveRemote>()
 
     if(userInfo != null){
         Users.update(UserDTO(
